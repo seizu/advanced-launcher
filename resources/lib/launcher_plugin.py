@@ -1790,7 +1790,13 @@ class Main:
                                         else:
                                             info = None
                                         startproc = subprocess_hack.Popen(r'%s %s' % (application, arguments), cwd=apppath, startupinfo=info)
-                                        startproc.wait()
+					PIDFILE = os.path.join(PLUGIN_DATA_PATH,"pid")
+					fh = open(PIDFILE,'w')
+					fh.write("%d" % (startproc.pid))
+					fh.close()
+					self._print_log("ProcessID %d" % (startproc.pid))
+					startproc.wait()
+					os.remove(PIDFILE)
                                 elif (sys.platform.startswith('linux')):
                                     if ( self.settings[ "lirc_state" ] ):
                                         xbmc.executebuiltin('LIRC.stop')
